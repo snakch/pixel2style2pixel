@@ -48,6 +48,7 @@ class ImagesDataset(Dataset):
             from_im = to_im
         latent = None
         if self.latent_paths is not None:
-            latent = torch.load(to_path)
+            latent_path = self.latent_paths[index]
+            latent = torch.load(latent_path)
 
         return from_im, to_im, latent
