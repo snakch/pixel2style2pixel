@@ -51,6 +51,6 @@ class ImagesDataset(Dataset):
         latent = None
         if self.latent_paths is not None:
             latent_path = self.latent_paths[index]
-            latent = torch.load(latent_path)
+            latent = torch.load(latent_path).to("cpu")
 
         return from_im, to_im, latent
