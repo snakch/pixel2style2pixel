@@ -2,6 +2,7 @@ from torch.utils.data import Dataset
 from PIL import Image
 from utils import data_utils
 import torch
+import torchvision.transforms as transforms
 
 
 class ImagesDataset(Dataset):
@@ -51,6 +52,7 @@ class ImagesDataset(Dataset):
         latent = None
         if self.latent_paths is not None:
             latent_path = self.latent_paths[index]
-            latent = torch.load(latent_path).to("cpu")
+            z = np.load(latent_path)
+            latent = torch.from_numpy(z)
 
         return from_im, to_im, latent
