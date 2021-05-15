@@ -10,5 +10,5 @@ class WNormLoss(nn.Module):
 
 	def forward(self, latent, latent_avg=None):
 		if self.start_from_latent_avg:
-			latent = latent - latent_avg
+			latent = latent - latent_avg[:16]
 		return torch.sum(latent.norm(2, dim=(1, 2))) / latent.shape[0]

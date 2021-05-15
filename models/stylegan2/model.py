@@ -369,6 +369,7 @@ class Generator(nn.Module):
             blur_kernel=[1, 3, 3, 1],
             lr_mlp=0.01,
     ):
+        print('new stuff!')
         super().__init__()
 
         self.size = size
@@ -526,11 +527,14 @@ class Generator(nn.Module):
         for conv1, conv2, noise1, noise2, to_rgb in zip(
                 self.convs[::2], self.convs[1::2], noise[1::2], noise[2::2], self.to_rgbs
         ):
-            out = conv1(out, latent[:, i], noise=noise1)
-            out = conv2(out, latent[:, i + 1], noise=noise2)
-            skip = to_rgb(out, latent[:, i + 2], skip)
+            try:
+              out = conv1(out, latent[:, i], noise=noise1)
+              out = conv2(out, latent[:, i + 1], noise=noise2)
+              skip = to_rgb(out, latent[:, i + 2], skip)
 
-            i += 2
+              i += 2
+            except IndexError:
+              continue
 
         image = skip
 

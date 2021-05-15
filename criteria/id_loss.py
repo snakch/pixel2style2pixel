@@ -26,6 +26,7 @@ class IDLoss(nn.Module):
         y_hat_feats = self.extract_feats(y_hat)
         y_feats = y_feats.detach()
         loss = 0
+        input_loss = 0
         sim_improvement = 0
         id_logs = []
         count = 0
@@ -37,8 +38,9 @@ class IDLoss(nn.Module):
                             'diff_input': float(diff_input),
                             'diff_views': float(diff_views)})
             loss += 1 - diff_target
+            input_loss += 1 - diff_input
             id_diff = float(diff_target) - float(diff_views)
             sim_improvement += id_diff
             count += 1
 
-        return loss / count, sim_improvement / count, id_logs
+        return loss / count, input_loss / count, sim_improvement / count, id_logs
