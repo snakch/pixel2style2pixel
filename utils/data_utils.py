@@ -24,7 +24,7 @@ def is_image_file(filename):
 
 
 def is_tensor(filename):
-    return filename.endswith(".pt")
+    return filename.endswith(".npy")
 
 
 def make_dataset(dir):
