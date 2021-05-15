@@ -16,12 +16,12 @@ class ImagesDataset(Dataset):
     ):
 
         self.target_paths = sorted(data_utils.make_dataset(target_root))
-        self.source_paths = sorted(
-            data_utils.make_latents_dataset(source_root)
-        )
+        self.source_paths = sorted(data_utils.make_dataset(source_root))
         self.latent_paths = None
         if latents_root is not None:
-            self.latent_paths = sorted(data_utils.make_dataset(latents_root))
+            self.latent_paths = sorted(
+                data_utils.make_latents_dataset(latents_root)
+            )
 
         self.source_transform = source_transform
         self.target_transform = target_transform
