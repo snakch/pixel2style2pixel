@@ -250,20 +250,20 @@ class Coach:
         loss = 0.0
         id_logs = None
 
-        if target_latent is not None:
-            loss_latent = F.mse_loss(latent, target_latent)
-            loss_dict["loss_latent"] = float(loss_latent)
-            loss += loss_latent * self.opts.latent_lambda
-
         if self.opts.id_lambda > 0 or self.opts.id_lambda_input > 0:
             loss_id, loss_id_input, sim_improvement, id_logs = self.id_loss(
                 y_hat, y, x
             )
             loss_dict["loss_id"] = float(loss_id)
+            loss_dict["loss_id_input"] = float(loss_id_input)
             loss_dict["id_improve"] = float(sim_improvement)
             loss = loss_id * self.opts.id_lambda
             loss += loss_id_input * self.opts.id_lambda_input
 
+        if target_latent is not None and self.opts.latent_lambda > 0:
+            loss_latent = F.mse_loss(latent, target_latent)
+            loss_dict["loss_latent"] = float(loss_latent)
+            loss += loss_latent * self.opts.latent_lambda
         if self.opts.l2_lambda > 0:
             loss_l2 = F.mse_loss(y_hat, y)
             loss_dict["loss_l2"] = float(loss_l2)
