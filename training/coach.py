@@ -79,9 +79,12 @@ class Coach:
         while self.global_step < self.opts.max_steps:
             for batch_idx, batch in enumerate(self.train_dataloader):
                 self.optimizer.zero_grad()
-                x, y, target_latent = batch
-                if target_latent is not None:
+                target_latent = None
+                if self.opts.latent_lambda > 0:
+                    x, y, target_latent = batch
                     target_latent = target_latent.to(self.device)
+                else:
+                    x, y = batch
                 x, y = x.to(self.device).float(), y.to(self.device).float()
 
                 y_hat, latent = self.net.forward(x, return_latents=True)
@@ -135,7 +138,12 @@ class Coach:
         self.net.eval()
         agg_loss_dict = []
         for batch_idx, batch in enumerate(self.test_dataloader):
-            x, y, target_latent = batch
+            target_latent = None
+            if self.opts.latent_lambda > 0:
+                x, y, target_latent = batch
+                target_latent = target_latent.to(self.device)
+            else:
+                x, y = batch
 
             with torch.no_grad():
                 x, y = x.to(self.device).float(), y.to(self.device).float()
@@ -260,7 +268,7 @@ class Coach:
             loss = loss_id * self.opts.id_lambda
             loss += loss_id_input * self.opts.id_lambda_input
 
-        if target_latent is not None and self.opts.latent_lambda > 0:
+        if if target_latent is not None and self.opts.latent_lambda > 0:
             loss_latent = F.mse_loss(latent, target_latent)
             loss_dict["loss_latent"] = float(loss_latent)
             loss += float(loss_latent) * self.opts.latent_lambda

@@ -1,9 +1,9 @@
-from torch.utils.data import Dataset
-from PIL import Image
-from utils import data_utils
+import numpy as np
 import torch
 import torchvision.transforms as transforms
-import numpy as np
+from PIL import Image
+from torch.utils.data import Dataset
+from utils import data_utils
 
 
 class ImagesDataset(Dataset):
@@ -56,4 +56,6 @@ class ImagesDataset(Dataset):
             z = np.load(latent_path)
             latent = torch.from_numpy(z)
 
-        return from_im, to_im, latent
+            return from_im, to_im, latent
+
+        return from_im, to_im
