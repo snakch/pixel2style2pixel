@@ -268,7 +268,7 @@ class Coach:
             loss = loss_id * self.opts.id_lambda
             loss += loss_id_input * self.opts.id_lambda_input
 
-        if if target_latent is not None and self.opts.latent_lambda > 0:
+        if target_latent is not None and self.opts.latent_lambda > 0:
             loss_latent = F.mse_loss(latent, target_latent)
             loss_dict["loss_latent"] = float(loss_latent)
             loss += float(loss_latent) * self.opts.latent_lambda
