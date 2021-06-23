@@ -26,7 +26,9 @@ class pSp(nn.Module):
         self.set_opts(opts)
         # Define architecture
         self.encoder = self.set_encoder()
-        self.decoder = Generator(512, 512, 8, channel_multiplier=2)
+        self.decoder = Generator(
+            512, 512, 8, channel_multiplier=2, c_dim=self.opts.c_dim
+        )
 
         self.face_pool = torch.nn.AdaptiveAvgPool2d((256, 256))
         # Load weights if needed
@@ -148,6 +150,8 @@ class pSp(nn.Module):
             return images
 
     def set_opts(self, opts):
+        if opts.c_dim is not None:
+            opts.c_dim = 0
         self.opts = opts
 
     def __load_latent_avg(self, ckpt, repeat=None):
