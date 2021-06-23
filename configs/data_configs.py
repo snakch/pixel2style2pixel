@@ -10,6 +10,14 @@ DATASETS = {
         "test_source_root": dataset_paths["ffhq_512_val"],
         "test_target_root": dataset_paths["ffhq_512_val"],
     },
+    "ffhq_encode_cond": {
+        "transforms": transforms_config.EncodeTransforms,
+        "train_source_root": dataset_paths["ffhq_512_cond"],
+        "train_target_root": dataset_paths["ffhq_512_cond"],
+        "test_source_root": dataset_paths["ffhq_512_cond_val"],
+        "test_target_root": dataset_paths["ffhq_512_cond_val"],
+        "labels": dataset_paths["ffhq_512_labels"],
+    },
     "paired_gens": {
         "transforms": transforms_config.PairedEncodeTransforms,
         "train_source_root": dataset_paths["paired_gens_input"],

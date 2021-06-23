@@ -1,4 +1,3 @@
-
 """
 This file defines the core research contribution
 """
@@ -89,6 +88,7 @@ class pSp(nn.Module):
     def forward(
         self,
         x,
+        labels=None,
         resize=True,
         latent_mask=None,
         input_code=False,
@@ -98,9 +98,8 @@ class pSp(nn.Module):
         return_latents=False,
         alpha=None,
         truncation=1,
-
     ):
-      
+
         if input_code:
             codes = x
         else:
@@ -111,7 +110,7 @@ class pSp(nn.Module):
                     codes = codes + self.latent_avg.repeat(codes.shape[0], 1)
                 # else:
                 # codes = codes + self.latent_avg.repeat(codes.shape[0], 1, 1)
-        
+
         if latent_mask is not None:
             for i in latent_mask:
                 if inject_latent is not None:
@@ -132,11 +131,12 @@ class pSp(nn.Module):
         input_is_latent = not input_code
         images, result_latent = self.decoder(
             [codes],
+            labels=labels,
             input_is_latent=input_is_latent,
             randomize_noise=randomize_noise,
             return_latents=return_latents,
             truncation=truncation,
-            truncation_latent = self.decoder.mean_latent(4096)
+            truncation_latent=self.decoder.mean_latent(4096),
         )
 
         if resize:
@@ -157,4 +157,3 @@ class pSp(nn.Module):
                 self.latent_avg = self.latent_avg.repeat(repeat, 1)
         else:
             self.latent_avg = None
-

@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 import torch
 import torchvision.transforms as transforms
@@ -13,6 +15,7 @@ class ImagesDataset(Dataset):
         target_root,
         opts,
         latents_root=None,
+        labels_path=None,
         target_transform=None,
         source_transform=None,
     ):
@@ -24,6 +27,12 @@ class ImagesDataset(Dataset):
             self.latent_paths = sorted(
                 data_utils.make_latents_dataset(latents_root)
             )
+
+        self.path_to_label = None
+        if labels_path is not None:
+            with open(labels_path) as f:
+                labels = json.load(f)["labels"]
+            self.path_to_label = {path: label for path, label in labels}
 
         self.source_transform = source_transform
         self.target_transform = target_transform
@@ -51,6 +60,13 @@ class ImagesDataset(Dataset):
         else:
             from_im = to_im
         latent = None
+
+        if self.path_to_label is not None:
+            label_list = self.path_to_label[from_path]
+            label = torch.zeros([1, len(label_list)])
+            label = label[:, label_list]
+            return from_im, to_im, label
+
         if self.latent_paths is not None:
             latent_path = self.latent_paths[index]
             z = np.load(latent_path)

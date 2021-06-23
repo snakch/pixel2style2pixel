@@ -16,6 +16,9 @@ dataset_paths = {
     "paired_gens_val_latents": "/content/drive/MyDrive/Colab_Notebooks/baldurs_gan/stylegan2_outputs/paired_images/latents_val",
     "ffhq_512": "/content/ffhq_512/",
     "ffhq_512_val": "/content/ffhq_512_val",
+    "ffhq_512_cond": "/content/ffhq_512_trimmed/",
+    "ffhq_512_cond_val": "/content/ffhq_512_filtered",
+    "ffhq_512_labels": "/content/ffhq_512_filtered/dataset.json",
 }
 
 model_paths = {

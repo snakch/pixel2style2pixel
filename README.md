@@ -1,5 +1,9 @@
 This is a fork from the original [pixel2style2pixel implementation] (https://github.com/eladrich/pixel2style2pixel)
 
+Modifications include:
+
+* The ability to use a target latent space during the optimisation process, to make training on paired data generated from the same stylegan model more efficient.
+
 
 # Encoding in Style: a StyleGAN Encoder for Image-to-Image Translation
   <a href="https://arxiv.org/abs/2008.00951"><img src="https://img.shields.io/badge/arXiv-2008.00951-b31b1b.svg"></a>

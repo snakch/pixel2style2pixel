@@ -80,14 +80,20 @@ class Coach:
             for batch_idx, batch in enumerate(self.train_dataloader):
                 self.optimizer.zero_grad()
                 target_latent = None
-                if self.opts.latent_lambda > 0:
+                labels = None
+                if self.labels_path is not None:
+                    x, y, labels = batch
+                    labels = labels.to(self.device)
+                elif self.opts.latent_lambda > 0:
                     x, y, target_latent = batch
                     target_latent = target_latent.to(self.device)
                 else:
                     x, y = batch
                 x, y = x.to(self.device).float(), y.to(self.device).float()
 
-                y_hat, latent = self.net.forward(x, return_latents=True)
+                y_hat, latent = self.net.forward(
+                    x, labels=None, return_latents=True
+                )
                 loss, loss_dict, id_logs = self.calc_loss(
                     x, y, y_hat, latent, target_latent
                 )
@@ -139,7 +145,11 @@ class Coach:
         agg_loss_dict = []
         for batch_idx, batch in enumerate(self.test_dataloader):
             target_latent = None
-            if self.opts.latent_lambda > 0:
+            labels = None
+            if self.labels_path is not None:
+                x, y, labels = batch
+                labels = labels.to(self.device)
+            elif self.opts.latent_lambda > 0:
                 x, y, target_latent = batch
                 target_latent = target_latent.to(self.device)
             else:
@@ -149,7 +159,9 @@ class Coach:
                 x, y = x.to(self.device).float(), y.to(self.device).float()
                 if target_latent is not None:
                     target_latent = target_latent.to(self.device)
-                y_hat, latent = self.net.forward(x, return_latents=True)
+                y_hat, latent = self.net.forward(
+                    x, labels=None, return_latents=True
+                )
                 loss, cur_loss_dict, id_logs = self.calc_loss(
                     x, y, y_hat, latent, target_latent
                 )
@@ -223,6 +235,10 @@ class Coach:
 
         train_latents_root = None
         test_latents_root = None
+        self.labels_path = None
+
+        if "labels" in dataset_args.keys():
+            self.labels_path = dataset_args["labels"]
 
         if "train_latents_root" in dataset_args.keys():
             train_latents_root = dataset_args["train_latents_root"]
@@ -236,6 +252,7 @@ class Coach:
             source_transform=transforms_dict["transform_source"],
             target_transform=transforms_dict["transform_gt_train"],
             latents_root=train_latents_root,
+            labels_path=self.labels_path,
             opts=self.opts,
         )
 
