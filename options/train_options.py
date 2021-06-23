@@ -45,6 +45,8 @@ class TrainOptionsDataClass:
     # arguments for super-resolution
     resize_factors: str = None
 
+    c_dim: int = 0
+
 
 class TrainOptions:
     def __init__(self):
